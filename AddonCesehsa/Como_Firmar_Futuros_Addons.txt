@@ -1,0 +1,62 @@
+================================================================================
+GUIA: COMO FIRMAR FUTUROS ADD-ONS CON EL CERTIFICADO CORPORATIVO CESEHSA
+================================================================================
+
+El certificado corporativo instalado en tu equipo es:
+- Nombre: CESEHSA Desarrollos SAP Addons
+- Huella (Thumbprint): F2561E970D87181A51F413E112CC9E06B8148D45
+- Vigencia: Hasta el ano 2036 (10 anos)
+
+Cualquier Add-on firmado con este certificado funcionara automaticamente en todas 
+las computadoras de la empresa que tengan instalado el certificado "CESEHSA_Addons.cer".
+
+--------------------------------------------------------------------------------
+PASO 1: COMPILAR EL NUEVO ADD-ON (MODO PRODUCCION / SELF-CONTAINED)
+--------------------------------------------------------------------------------
+Abre tu consola de comandos en la carpeta de tu nuevo proyecto y compila:
+
+dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o .\publish
+
+Esto generara el ejecutable final en la subcarpeta \publish de tu proyecto.
+
+
+--------------------------------------------------------------------------------
+PASO 2: FIRMAR EL EJECUTABLE CON EL CERTIFICADO CESEHSA
+--------------------------------------------------------------------------------
+Abre PowerShell y ejecuta estas dos lineas (solo cambia la ruta a tu nuevo .exe):
+
+$cert = Get-Item "Cert:\CurrentUser\My\F2561E970D87181A51F413E112CC9E06B8148D45"
+Set-AuthenticodeSignature -Certificate $cert -FilePath "C:\Ruta\De\Tu\Proyecto\publish\TuAddon.exe" -TimestampServer "http://timestamp.digicert.com"
+
+
+--------------------------------------------------------------------------------
+PASO 3: COMPROBAR QUE LA FIRMA SE APLICO CORRECTAMENTE
+--------------------------------------------------------------------------------
+En PowerShell ejecuta:
+
+Get-AuthenticodeSignature "C:\Ruta\De\Tu\Proyecto\publish\TuAddon.exe"
+
+Debe mostrar:
+Status        : Valid
+StatusMessage : Firma comprobada.
+Signer        : CN=CESEHSA Desarrollos SAP Addons
+
+
+--------------------------------------------------------------------------------
+PASO 4: EMPAQUETAR Y SUBIR A SAP BUSINESS ONE
+--------------------------------------------------------------------------------
+1. Abre la herramienta "Extension Registration Data Generator" de SAP.
+2. En la pestana de 64-Bit selecciona el archivo .exe que acabas de firmar (en \publish).
+3. Haz clic en "Package" para crear el archivo .zip.
+4. Sube el .zip en el Extension Manager de SAP (https://desktop23dbs23.cesehsa.com:40000/ExtensionManager/).
+5. Asignalo a la empresa con "Force Install".
+
+--------------------------------------------------------------------------------
+RECORDATORIO PARA NUEVAS LAPTOPS EN LA EMPRESA:
+--------------------------------------------------------------------------------
+Cuando entreguen una computadora o laptop nueva a un usuario:
+1. Copia la carpeta "Certificado_CESEHSA" del Escritorio a la nueva laptop.
+2. Haz clic derecho en "Instalar_Certificado.bat" y selecciona "Ejecutar como administrador".
+3. Listo. Esa maquina quedara autorizada de por vida para ejecutar cualquier Add-on 
+   actual o futuro de CESEHSA.
+================================================================================

@@ -1,0 +1,49 @@
+# ==========================================
+# CREDENCIALES, CERTIFICADOS Y ARCHIVOS PRIVADOS
+# ==========================================
+certificados/
+*.key
+*.cer
+*.pfx
+*.p12
+*.pem
+*contrase*.txt
+*password*.txt
+.env
+.env.*
+*.secret
+
+# ==========================================
+# EJECUTABLES Y EMPAQUETADO (PyInstaller)
+# ==========================================
+build/
+dist/
+*.exe
+*.spec
+
+# ==========================================
+# CACHÉ DE PYTHON
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+.pytest_cache/
+venv/
+.venv/
+env/
+
+# ==========================================
+# REPORTES Y DATOS GENERADOS (CFDIs, Excel)
+# ==========================================
+reportes/
+*.xlsx
+*.xls
+*.csv
+
+# ==========================================
+# CONFIGURACIÓN DE EDITORES / IDEs
+# ==========================================
+.vscode/
+.idea/
+*.swp
